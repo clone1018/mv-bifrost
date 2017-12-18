@@ -1,3 +1,4 @@
+import Types from "../types";
 
 export default class Player {
 
@@ -20,13 +21,40 @@ export default class Player {
     this.socket = socket;
 
     let player = this;
+    window.addEventListener('Game_Player.refresh', function (e) {
+      console.info('Game_Player.refresh', e.detail);
+      player.characterIndex = e.detail.characterIndex;
+      player.characterName = e.detail.characterName;
+    });
     window.addEventListener('Game_Player.moveByInput.beforeMove', function (e) {
-      console.log('beforeMove', e.detail);
+      console.info('Game_Player.moveByInput.beforeMove', e.detail);
     });
     window.addEventListener('Game_Player.moveByInput.afterMove', function (e) {
-      console.log('afterMove', e.detail);
+      console.info('Game_Player.moveByInput.afterMove', e.detail);
       player.handleMove(e.detail);
     });
+    window.addEventListener('Scene_Map.create', function (e) {
+      console.info('Scene_Map.create', e.detail);
+      player.handleMapChange(e.detail.map_id);
+    });
+    window.addEventListener('Scene_Map.stop', function (e) {
+      console.info('Scene_Map.stop', e.detail);
+      //player.handleMapChange(e.detail.map_id)
+    });
+  }
+
+  handleMapChange(map_id) {
+    this.socket.send(JSON.stringify([
+      Types.Messages.SPAWN,
+      map_id,
+      this.x,
+      this.y,
+      this.characterIndex,
+      this.characterName,
+      this.direction,
+      this.moveSpeed,
+      this.moveFrequency
+    ]));
   }
 
   handleMove(detail) {
@@ -38,7 +66,16 @@ export default class Player {
     this.moveSpeed = detail.moveSpeed;
     this.moveFrequency = detail.moveFrequency;
 
-    this.socket.send(JSON.stringify({event: "PLAYER_MOVE", data: this.data()}));
+    this.socket.send(JSON.stringify([
+      Types.Messages.MOVE,
+      this.x,
+      this.y,
+      this.characterIndex,
+      this.characterName,
+      this.direction,
+      this.moveSpeed,
+      this.moveFrequency,
+    ]));
   }
 
   data() {

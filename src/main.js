@@ -9,20 +9,17 @@ import "./Lib/OrangeCustomEvents";
 
 import Player from "./Game/Player";
 import PlayerManager from "./Game/PlayerManager";
+import Types from "./types";
 
 import "./Events/Game_Player";
+import "./Events/Scene_Map";
 
 (function () {
   var parameters = PluginManager.parameters('Bifrost');
 
   var socket = new WebSocket("ws://127.0.0.1:8101");
   socket.onopen = function (event) {
-    socket.send(JSON.stringify({
-      event: 'CONNECT',
-      data: {
-        game_id: GAME_ID
-      }
-    }));
+    socket.send(JSON.stringify([Types.Messages.CONNECT, GAME_ID]));
   };
 
   let playerManager = new PlayerManager(socket);

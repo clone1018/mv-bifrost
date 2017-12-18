@@ -1,4 +1,5 @@
 import NetworkPlayer from "./NetworkPlayer";
+import Types from "../types";
 
 export default class PlayerManager {
 
@@ -9,7 +10,62 @@ export default class PlayerManager {
 
   registerServerHooks() {
     let manager = this;
-    console.log(manager);
+
+
+    this.socket.onmessage = function (incoming) {
+      if (!SceneManager._sceneStarted || !SceneManager._scene._spriteset) return;
+
+      const json = incoming.data;
+      const message = JSON.parse(json);
+      console.log('received: %s', json);
+
+      let action = parseInt(message[0]);
+      let playerId = parseInt(message[1]);
+
+      if(playerId === window.GAME_ID) {
+        return;
+      }
+
+      if (!(playerId in manager.players)) {
+        manager.players[playerId] = new NetworkPlayer(playerId);
+      }
+      let player = manager.players[playerId];
+
+      if (action === Types.Messages.SPAWN) {
+
+
+      } else if(action === Types.Messages.DESPAWN) {
+        console.log("Removing player from map");
+        player.deleteEvent();
+      } else if (action === Types.Messages.MOVE) {
+        // Needs to be moved to spawn after I figure that out...
+        if (player.eventId === null || player.event !== $gameMap._events[player.eventId]) {
+          console.log("Creating player on map");
+          player.createEvent({
+            x: message[2],
+            y: message[3],
+            characterIndex: message[4],
+            characterName: message[5],
+            direction: message[6],
+            moveSpeed: message[7],
+            moveFrequency: message[8],
+          });
+        }
+
+        player.handleMove({
+          x: message[2],
+          y: message[3],
+          characterIndex: message[4],
+          characterName: message[5],
+          direction: message[6],
+          moveSpeed: message[7],
+          moveFrequency: message[8],
+        });
+      }
+    };
+
+
+    /*
     this.socket.onmessage = function (incoming) {
       console.log('received: %s', incoming.data);
       let msg = JSON.parse(incoming.data);
@@ -29,34 +85,11 @@ export default class PlayerManager {
         if (window.GAME_ID !== player.id) {
           if (!SceneManager._sceneStarted || !SceneManager._scene._spriteset) return;
 
-          console.log("Sending handleMove for " + player.id);
           player.handleMove(data);
-
-          // Another player, for now create a new actor
-
-          // Spriteset_Map.prototype.createNetworkPlayer = function(player) {
-          //   var sId = this._characterSprites.length;
-          //
-          //   let sprite = new Sprite_Character(newPlayer);
-          //   sprite.update();
-          //
-          //   this._characterSprites[sId] = sprite;
-          //   this._tilemap.addChild(this._characterSprites[sId]);
-          // };
-
-          var l = $dataMap.events.length;
-
-          //
-          // Game_Map.prototype.addEvent(eventData, true, index);
-          // $dataMap.events[l] = {};
-          // $gameMap._events[l] = new Game_Event($gameMap._mapId, l);
-          //SceneManager._scene.children = []; SceneManager._scene.createDisplayObjects();
-
-          // let newPlayer = new NetworkPlayer(1,data.id);
-          // SceneManager._scene._spriteset.createNetworkPlayer(newPlayer);
         }
       }
     }
+    */
   }
 
 

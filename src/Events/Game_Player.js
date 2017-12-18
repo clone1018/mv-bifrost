@@ -43,3 +43,18 @@ Game_Player.prototype.moveByInput = function () {
     }
   }
 };
+
+Game_Player.prototype.refresh = function() {
+  var actor = $gameParty.leader();
+  var characterName = actor ? actor.characterName() : '';
+  var characterIndex = actor ? actor.characterIndex() : 0;
+  this.setImage(characterName, characterIndex);
+  this._followers.refresh();
+
+  window.dispatchEvent(new CustomEvent('Game_Player.refresh', {
+    detail: {
+      characterName: characterName,
+      characterIndex: characterIndex
+    }
+  }));
+};

@@ -3,11 +3,10 @@ import Player from "./Player";
 export default class NetworkPlayer extends Player {
 
   constructor(id) {
-    super();
+    super(id);
   }
 
   createEvent(detail) {
-    console.log('createEvent', detail);
     this.x = detail.x;
     this.y = detail.y;
     this.characterIndex = detail.characterIndex;
@@ -16,10 +15,10 @@ export default class NetworkPlayer extends Player {
     this.moveSpeed = detail.moveSpeed;
     this.moveFrequency = detail.moveFrequency;
 
-    var index = $gameMap._events.length;
+    let index = $gameMap._events.length;
 
     let eventObject = {
-      "id": 1,
+      "id": this.id,
       "name": "NetworkPlayer1",
       "note": "",
       "pages": [
@@ -70,7 +69,7 @@ export default class NetworkPlayer extends Player {
           "moveType": 0,
           "priorityType": 1,
           "stepAnime": false,
-          "through": false,
+          "through": true,
           "trigger": 0,
           "walkAnime": true
         }
@@ -78,12 +77,22 @@ export default class NetworkPlayer extends Player {
       "x": this.x,
       "y": this.y
     };
-    console.log(eventObject);
 
-    var created = $gameMap.addEvent(eventObject, true, index);
+    let created = $gameMap.addEvent(eventObject, true, index);
 
     this.eventId = index;
     this.event = created;
+  }
+
+  deleteEvent() {
+    $gameSystem.removeCustomEvent($gameMap._mapId, this.eventId);
+
+    if(this.eventId in $gameMap._events) {
+      $gameMap.eraseEvent(this.eventId);
+    }
+
+    this.eventId = null;
+    this.event = null;
   }
 
   handleMove(detail) {
