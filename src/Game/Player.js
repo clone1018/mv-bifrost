@@ -17,14 +17,17 @@ export default class Player {
     this.moveFrequency = 0;
   }
 
-  registerGameHooks(socket) {
+  setSocket(socket) {
     this.socket = socket;
+  }
 
+  registerGameHooks() {
     let player = this;
     window.addEventListener('Game_Player.refresh', function (e) {
       console.info('Game_Player.refresh', e.detail);
       player.characterIndex = e.detail.characterIndex;
       player.characterName = e.detail.characterName;
+      player.handleRefresh(player.characterIndex, player.characterName);
     });
     window.addEventListener('Game_Player.moveByInput.beforeMove', function (e) {
       console.info('Game_Player.moveByInput.beforeMove', e.detail);
@@ -43,18 +46,38 @@ export default class Player {
     });
   }
 
+  sendMessage(type, params) {
+    console.log(this.channel);
+    this.channel.push(type, params);
+  }
+
+  connect() {
+    console.log('connect');
+
+    // This needs to be done earlier, maybe on an account channel?
+    // this.sendMessage("CONNECT", [window.GAME_ID, window.PLAYER_ID]);
+  }
+
   handleMapChange(map_id) {
-    this.socket.send(JSON.stringify([
-      Types.Messages.SPAWN,
-      map_id,
-      this.x,
-      this.y,
-      this.characterIndex,
-      this.characterName,
-      this.direction,
-      this.moveSpeed,
-      this.moveFrequency
-    ]));
+    this.channel = this.socket.channel("map:" + map_id , {});
+    this.channel.join();
+
+    // this.socket.send(JSON.stringify([
+    //   Types.Messages.SPAWN,
+    //   this.id,
+    //   map_id,
+    //   this.x,
+    //   this.y
+    // ]));
+  }
+
+  handleRefresh(index, name) {
+    // this.socket.send(JSON.stringify([
+    //   Types.Messages.REFRESH,
+    //   this.id,
+    //   index,
+    //   name
+    // ]));
   }
 
   handleMove(detail) {
@@ -66,16 +89,23 @@ export default class Player {
     this.moveSpeed = detail.moveSpeed;
     this.moveFrequency = detail.moveFrequency;
 
-    this.socket.send(JSON.stringify([
-      Types.Messages.MOVE,
-      this.x,
-      this.y,
-      this.characterIndex,
-      this.characterName,
-      this.direction,
-      this.moveSpeed,
-      this.moveFrequency,
-    ]));
+    this.sendMessage("MOVE", {
+      "x": this.x,
+      "y": this.y,
+      "direction": this.direction,
+      "move_speed": this.moveSpeed,
+      "move_frequency": this.moveFrequency,
+    });
+    // this.socket.send(JSON.stringify([
+    //   Types.Messages.MOVE,
+    //   this.id,
+    //   detail.map_id,
+    //   this.x,
+    //   this.y,
+    //   this.direction,
+    //   this.moveSpeed,
+    //   this.moveFrequency,
+    // ]));
   }
 
   data() {

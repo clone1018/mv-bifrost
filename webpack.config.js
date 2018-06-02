@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: "./src/main.js",
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve("/Users/clone1018/Projects/clone1018/mv-mmo-test/js/plugins"),
     filename: 'Bifrost.js'
   },
   devtool: "inline-source-map",

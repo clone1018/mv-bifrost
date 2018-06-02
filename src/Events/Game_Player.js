@@ -17,6 +17,7 @@ Game_Player.prototype.moveByInput = function () {
     if (direction > 0) {
       window.dispatchEvent(new CustomEvent('Game_Player.moveByInput.beforeMove', {
         detail: {
+          map_id: $gameMap.mapId(),
           x: this.x,
           y: this.y,
           direction: direction,
@@ -31,6 +32,7 @@ Game_Player.prototype.moveByInput = function () {
 
       window.dispatchEvent(new CustomEvent('Game_Player.moveByInput.afterMove', {
         detail: {
+          map_id: $gameMap.mapId(),
           x: this.x,
           y: this.y,
           direction: direction,

@@ -42,24 +42,24 @@ export default class PlayerManager {
         if (player.eventId === null || player.event !== $gameMap._events[player.eventId]) {
           console.log("Creating player on map");
           player.createEvent({
-            x: message[2],
-            y: message[3],
-            characterIndex: message[4],
-            characterName: message[5],
-            direction: message[6],
-            moveSpeed: message[7],
-            moveFrequency: message[8],
+            x: message[3],
+            y: message[4],
+            characterIndex: 0,
+            characterName: "Actor1",
+            direction: message[5],
+            moveSpeed: message[6],
+            moveFrequency: message[7],
           });
         }
 
         player.handleMove({
-          x: message[2],
-          y: message[3],
-          characterIndex: message[4],
-          characterName: message[5],
-          direction: message[6],
-          moveSpeed: message[7],
-          moveFrequency: message[8],
+          x: message[3],
+          y: message[4],
+          characterIndex: 0,
+          characterName: "Actor1",
+          direction: message[5],
+          moveSpeed: message[6],
+          moveFrequency: message[7],
         });
       }
     };
