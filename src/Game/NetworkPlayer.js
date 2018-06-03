@@ -1,19 +1,29 @@
-import Player from "./Player";
 
-export default class NetworkPlayer extends Player {
+export default class NetworkPlayer {
 
   constructor(id) {
-    super(id);
+    this.id = id;
+    this.eventId = null;
+    this.event = null;
+
+    this.x = 0;
+    this.y = 0;
+
+    this.characterIndex = 0;
+    this.characterName = null;
+    this.direction = 0;
+    this.moveSpeed = 0;
+    this.moveFrequency = 0;
   }
 
   createEvent(detail) {
-    this.x = detail.x;
-    this.y = detail.y;
-    this.characterIndex = detail.characterIndex;
-    this.characterName = detail.characterName;
-    this.direction = detail.direction;
-    this.moveSpeed = detail.moveSpeed;
-    this.moveFrequency = detail.moveFrequency;
+    // this.x = detail.x;
+    // this.y = detail.y;
+    // this.characterIndex = detail.characterIndex;
+    // this.characterName = detail.characterName;
+    // this.direction = detail.direction;
+    // this.moveSpeed = detail.moveSpeed;
+    // this.moveFrequency = detail.moveFrequency;
 
     let index = $gameMap._events.length;
 
@@ -217,14 +227,6 @@ export default class NetworkPlayer extends Player {
   }
 
   handleMove(detail) {
-    this.x = detail.x;
-    this.y = detail.y;
-    this.characterIndex = detail.characterIndex;
-    this.characterName = detail.characterName;
-    this.direction = detail.direction;
-    this.moveSpeed = detail.moveSpeed;
-    this.moveFrequency = detail.moveFrequency;
-
     this.event.setMoveFrequency(this.moveFrequency);
     this.event.setMoveSpeed(this.moveSpeed);
     this.event.moveStraight(this.direction);

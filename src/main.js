@@ -15,6 +15,8 @@ import PlayerManager from "./Game/PlayerManager";
 import NetworkBattleManager from "./Game/NetworkBattleManager";
 import Types from "./types";
 
+import Map from "./ServerEvents/Map";
+
 import "./Events/Game_Party";
 import "./Events/Game_Player";
 import "./Events/Scene_Battle";
@@ -24,7 +26,10 @@ import "./Events/Scene_Menu";
 (function () {
   var parameters = PluginManager.parameters('Bifrost');
 
-  let socket = new Socket("ws://127.0.0.1:8101/socket", {params: {userToken: "123"}})
+  let socket = new Socket("ws://127.0.0.1:8101/socket", {
+    logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) },
+    params: {player_id: GAME_ID}
+  })
   socket.connect()
   // playerChannel.join()
   //   .receive("ok", resp => { console.log("Joined successfully", resp) })
@@ -39,5 +44,6 @@ import "./Events/Scene_Menu";
     let player = new Player(GAME_ID);
     player.setSocket(socket);
     player.registerGameHooks();
+    // player.registerServerHooks();
     player.connect();
 })();

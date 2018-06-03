@@ -1,5 +1,7 @@
 import Types from "../types";
 
+import MapManager from "./MapManager";
+
 export default class Player {
 
   constructor(id) {
@@ -42,12 +44,16 @@ export default class Player {
     });
     window.addEventListener('Scene_Map.stop', function (e) {
       console.info('Scene_Map.stop', e.detail);
+      // TODO: Handle player despawn here
       //player.handleMapChange(e.detail.map_id)
     });
   }
 
+  registerServerHooks() {
+
+  }
+
   sendMessage(type, params) {
-    console.log(this.channel);
     this.channel.push(type, params);
   }
 
@@ -62,6 +68,13 @@ export default class Player {
     this.channel = this.socket.channel("map:" + map_id , {});
     this.channel.join();
 
+    this.map_manager = new MapManager(this.channel);
+
+    this.sendMessage("SPAWN", {
+      "x": this.x,
+      "y": this.y
+    });
+
     // this.socket.send(JSON.stringify([
     //   Types.Messages.SPAWN,
     //   this.id,
@@ -72,12 +85,10 @@ export default class Player {
   }
 
   handleRefresh(index, name) {
-    // this.socket.send(JSON.stringify([
-    //   Types.Messages.REFRESH,
-    //   this.id,
-    //   index,
-    //   name
-    // ]));
+    this.sendMessage("REFRESH", {
+      "character_index": index,
+      "character_name": name,
+    });
   }
 
   handleMove(detail) {
