@@ -23,7 +23,10 @@ import "./Events/Scene_Battle";
 import "./Events/Scene_Map";
 import "./Events/Scene_Menu";
 
-(function () {
+import Vue from 'vue';
+import App from './Components/App.vue';
+
+(function () { 
   var parameters = PluginManager.parameters('Bifrost');
 
   let socket = new Socket("ws://127.0.0.1:8101/socket", {
@@ -46,4 +49,10 @@ import "./Events/Scene_Menu";
     player.registerGameHooks();
     // player.registerServerHooks();
     player.connect();
+
+    new Vue({
+      el: '#app',
+      render: h => h(App)
+    });
+
 })();
