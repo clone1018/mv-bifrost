@@ -1,12 +1,12 @@
 <template>
-	<div id="app">
+	<div id="interface">
 		<h1>Testing!</h1>
 		<CharacterCreator/>
 	</div>
 </template>
 
 <script>
-import CharacterCreator from './CharacterCreator.vue'
+import CharacterCreator from './CharacterCreator/CharacterCreator.vue'
 
 export default {
 	components: {
@@ -21,12 +21,17 @@ export default {
 	box-sizing: border-box;
 }
 
-#app {
+#interface {
 	background-color: yellow;
-    position: relative;
-    z-index: 100;
-    height: 200px;
-    width: 200px;
+	position: absolute;
+	z-index: 100;
+    margin: auto;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 1280px;
+    height: 720px;
 }
 
 h1 {

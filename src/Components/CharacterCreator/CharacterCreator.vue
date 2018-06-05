@@ -1,14 +1,21 @@
 <template>
-  <p>{{ greeting }} World!</p>
+  <div>
+    <LayerSelector />
+  </div>
 </template>
 
 <script>
+import LayerSelector from './LayerSelector.vue'
+
 module.exports = {
   data: function () {
     return {
       greeting: 'Hello'
     }
-  }
+  },
+  components: {
+		LayerSelector
+	}
 }
 </script>
 
