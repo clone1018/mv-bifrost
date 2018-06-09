@@ -24,7 +24,12 @@ import "./Events/Scene_Map";
 import "./Events/Scene_Menu";
 
 import Vue from 'vue';
+import VueRouter from 'vue-router';
 import App from './Components/App.vue';
+
+import CharacterCreator from './Components/CharacterCreator/CharacterCreator.vue';
+import Login from './Components/Auth/Login.vue';
+import Game from './Components/Game.vue';
 
 (function () { 
   var parameters = PluginManager.parameters('Bifrost');
@@ -50,9 +55,26 @@ import App from './Components/App.vue';
     // player.registerServerHooks();
     player.connect();
 
-    new Vue({
-      el: '#app',
+    Vue.use(VueRouter);
+
+
+
+    const routes = [
+      { path: '/character-creator', component: CharacterCreator },
+      { path: '/login', component: Login },
+      { path: '/game', component: Game }
+    ]
+    const router = new VueRouter({
+      routes // short for `routes: routes`
+    })
+
+    const app = new Vue({
+      router,
       render: h => h(App)
-    });
+    }).$mount('#app')
+    // new Vue({
+    //   el: '#app',
+    //   render: h => h(App)
+    // });
 
 })();

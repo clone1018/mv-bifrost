@@ -1,28 +1,32 @@
 <template>
 	<div id="interface">
-		<h1>Testing!</h1>
-		<CharacterCreator/>
+		<router-view></router-view>
+		<p>
+    		<!-- use router-link component for navigation. -->
+			<!-- specify the link by passing the `to` prop. -->
+			<!-- `<router-link>` will be rendered as an `<a>` tag by default -->
+			<router-link to="/character-creator">Character Creator</router-link>
+			<router-link to="/login">Login</router-link>
+			<router-link to="/game">Game</router-link>
+		</p>
 	</div>
 </template>
 
 <script>
-import CharacterCreator from './CharacterCreator/CharacterCreator.vue'
 
 export default {
-	components: {
-		CharacterCreator
-	}
 }
 </script>
 
 <style>
+@import '../../node_modules/tachyons/css/tachyons.css';
 
 *, *::before, *::after {
 	box-sizing: border-box;
 }
 
 #interface {
-	background-color: yellow;
+	border: 5px solid pink;
 	position: absolute;
 	z-index: 100;
     margin: auto;
@@ -30,8 +34,8 @@ export default {
     left: 0px;
     right: 0px;
     bottom: 0px;
-    width: 1280px;
-    height: 720px;
+	width: 1290px;
+    height: 730px;
 }
 
 h1 {

@@ -5,7 +5,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 module.exports = {
   entry: "./src/main.js",
   output: {
-    path: path.resolve("/home/clone1018/Code/MMO_MV/mv-mmo-test/js/plugins"),
+    path: path.resolve("/Users/clone1018/Projects/clone1018/mv-mmo-test/js/plugins"),
     filename: 'Bifrost.js'
   },
   devtool: "inline-source-map",
@@ -27,6 +27,15 @@ module.exports = {
         use: [
           'vue-style-loader',
           'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'base64-inline-loader?limit=1000&name=[name].[ext]',
+            options: {}
+          }
         ]
       }
     ]
