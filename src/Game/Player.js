@@ -67,7 +67,9 @@ export default class Player {
 
   handleMapChange(map_id) {
     this.channel = this.socket.channel("map:" + map_id , {});
-    this.channel.join();
+    this.channel.join()
+      .receive("error", ({reason}) => alert("failed join" + reason) )
+      .receive("timeout", () => alert("Networking issue. Still waiting...") );
 
     this.map_manager = new MapManager(this.channel);
 
