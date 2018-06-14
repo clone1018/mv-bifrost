@@ -1,10 +1,4 @@
-Scene_Map.prototype.updateTransferPlayer = function() {
-  if ($gamePlayer.isTransferring()) {
-    SceneManager.goto(Scene_Map);
-
-
-  }
-};
+import hooker from '../hooker';
 
 Scene_Map.prototype.create = function() {
   Scene_Base.prototype.create.call(this);

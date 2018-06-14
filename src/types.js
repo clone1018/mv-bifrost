@@ -5,6 +5,7 @@ let Types = {
     SPAWN: 2,
     DESPAWN: 3,
     MOVE: 4,
+    REFRESH: 5
   },
 
   Orientations: {

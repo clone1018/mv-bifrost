@@ -1,9 +1,12 @@
 import Types from "../types";
 
+import MapManager from "./MapManager";
+
 export default class Player {
 
-  constructor(id) {
+  constructor(id, username) {
     this.id = id;
+    this.username = username;
     this.eventId = null;
     this.event = null;
 
@@ -17,14 +20,17 @@ export default class Player {
     this.moveFrequency = 0;
   }
 
-  registerGameHooks(socket) {
+  setSocket(socket) {
     this.socket = socket;
+  }
 
+  registerGameHooks() {
     let player = this;
     window.addEventListener('Game_Player.refresh', function (e) {
       console.info('Game_Player.refresh', e.detail);
       player.characterIndex = e.detail.characterIndex;
       player.characterName = e.detail.characterName;
+      player.handleRefresh(player.characterIndex, player.characterName);
     });
     window.addEventListener('Game_Player.moveByInput.beforeMove', function (e) {
       console.info('Game_Player.moveByInput.beforeMove', e.detail);
@@ -39,22 +45,53 @@ export default class Player {
     });
     window.addEventListener('Scene_Map.stop', function (e) {
       console.info('Scene_Map.stop', e.detail);
+      // TODO: Handle player despawn here
       //player.handleMapChange(e.detail.map_id)
     });
   }
 
+  registerServerHooks() {
+
+  }
+
+  sendMessage(type, params) {
+    this.channel.push(type, params);
+  }
+
+  connect() {
+    console.log('connect');
+
+    // This needs to be done earlier, maybe on an account channel?
+    // this.sendMessage("CONNECT", [window.GAME_ID, window.PLAYER_ID]);
+  }
+
   handleMapChange(map_id) {
-    this.socket.send(JSON.stringify([
-      Types.Messages.SPAWN,
-      map_id,
-      this.x,
-      this.y,
-      this.characterIndex,
-      this.characterName,
-      this.direction,
-      this.moveSpeed,
-      this.moveFrequency
-    ]));
+    this.channel = this.socket.channel("map:" + map_id , {});
+    this.channel.join()
+      .receive("error", ({reason}) => alert("failed join" + reason) )
+      .receive("timeout", () => alert("Networking issue. Still waiting...") );
+
+    this.map_manager = new MapManager(this.channel);
+
+    this.sendMessage("SPAWN", {
+      "x": this.x,
+      "y": this.y
+    });
+
+    // this.socket.send(JSON.stringify([
+    //   Types.Messages.SPAWN,
+    //   this.id,
+    //   map_id,
+    //   this.x,
+    //   this.y
+    // ]));
+  }
+
+  handleRefresh(index, name) {
+    this.sendMessage("REFRESH", {
+      "character_index": index,
+      "character_name": name,
+    });
   }
 
   handleMove(detail) {
@@ -66,16 +103,23 @@ export default class Player {
     this.moveSpeed = detail.moveSpeed;
     this.moveFrequency = detail.moveFrequency;
 
-    this.socket.send(JSON.stringify([
-      Types.Messages.MOVE,
-      this.x,
-      this.y,
-      this.characterIndex,
-      this.characterName,
-      this.direction,
-      this.moveSpeed,
-      this.moveFrequency,
-    ]));
+    this.sendMessage("MOVE", {
+      "x": this.x,
+      "y": this.y,
+      "direction": this.direction,
+      "move_speed": this.moveSpeed,
+      "move_frequency": this.moveFrequency,
+    });
+    // this.socket.send(JSON.stringify([
+    //   Types.Messages.MOVE,
+    //   this.id,
+    //   detail.map_id,
+    //   this.x,
+    //   this.y,
+    //   this.direction,
+    //   this.moveSpeed,
+    //   this.moveFrequency,
+    // ]));
   }
 
   data() {

@@ -1,19 +1,29 @@
-import Player from "./Player";
 
-export default class NetworkPlayer extends Player {
+export default class NetworkPlayer {
 
   constructor(id) {
-    super(id);
+    this.id = id;
+    this.eventId = null;
+    this.event = null;
+
+    this.x = 0;
+    this.y = 0;
+
+    this.characterIndex = 0;
+    this.characterName = null;
+    this.direction = 0;
+    this.moveSpeed = 0;
+    this.moveFrequency = 0;
   }
 
   createEvent(detail) {
-    this.x = detail.x;
-    this.y = detail.y;
-    this.characterIndex = detail.characterIndex;
-    this.characterName = detail.characterName;
-    this.direction = detail.direction;
-    this.moveSpeed = detail.moveSpeed;
-    this.moveFrequency = detail.moveFrequency;
+    // this.x = detail.x;
+    // this.y = detail.y;
+    // this.characterIndex = detail.characterIndex;
+    // this.characterName = detail.characterName;
+    // this.direction = detail.direction;
+    // this.moveSpeed = detail.moveSpeed;
+    // this.moveFrequency = detail.moveFrequency;
 
     let index = $gameMap._events.length;
 
@@ -47,6 +57,127 @@ export default class NetworkPlayer extends Player {
             "characterIndex": this.characterIndex
           },
           "list": [
+            {
+              "code": 102,
+              "indent": 0,
+              "parameters": [
+                [
+                  "Party",
+                  "Chat",
+                  "Other",
+                  "Other2",
+                  "Other3",
+                  "Other4"
+                ],
+                -2,
+                -1,
+                1,
+                0
+              ]
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                0,
+                "Party"
+              ]
+            },
+            {
+              "code": 355,
+              "indent": 1,
+              "parameters": [
+                "console.log('Adding player to Party')"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                1,
+                "Chat"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                2,
+                "Other"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                3,
+                "Other2"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                4,
+                "Other3"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 402,
+              "indent": 0,
+              "parameters": [
+                5,
+                "Other4"
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 403,
+              "indent": 0,
+              "parameters": [
+                6,
+                null
+              ]
+            },
+            {
+              "code": 0,
+              "indent": 1,
+              "parameters": []
+            },
+            {
+              "code": 404,
+              "indent": 0,
+              "parameters": []
+            },
             {
               "code": 0,
               "indent": 0,
@@ -96,14 +227,6 @@ export default class NetworkPlayer extends Player {
   }
 
   handleMove(detail) {
-    this.x = detail.x;
-    this.y = detail.y;
-    this.characterIndex = detail.characterIndex;
-    this.characterName = detail.characterName;
-    this.direction = detail.direction;
-    this.moveSpeed = detail.moveSpeed;
-    this.moveFrequency = detail.moveFrequency;
-
     this.event.setMoveFrequency(this.moveFrequency);
     this.event.setMoveSpeed(this.moveSpeed);
     this.event.moveStraight(this.direction);

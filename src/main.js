@@ -2,30 +2,67 @@
  * @plugindesc Bifrost - Connects with Heimdall to provide MMO features to MV games
  * @author clone1018       
  */
-var GAME_ID = Math.floor(Math.random() * 1000000000);
-window.GAME_ID = GAME_ID;
+
+import "./hooker";
 
 import "./Lib/OrangeCustomEvents";
+import "./Lib/CmdInp";
 
-import Player from "./Game/Player";
-import PlayerManager from "./Game/PlayerManager";
-import Types from "./types";
-
+import "./Events/Game_Party";
 import "./Events/Game_Player";
+import "./Events/Scene_Battle";
 import "./Events/Scene_Map";
+import "./Events/Scene_Menu";
+
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import App from './Components/App.vue';
+
+import CharacterCreator from './Components/CharacterCreator/CharacterCreator.vue';
+import Login from './Components/Auth/Login.vue';
+import DemoAuth from './Components/Auth/DemoAuth.vue';
+import Game from './Components/Game.vue';
 
 (function () {
-  var parameters = PluginManager.parameters('Bifrost');
+    var parameters = PluginManager.parameters('Bifrost');
 
-  var socket = new WebSocket("ws://127.0.0.1:8101");
-  socket.onopen = function (event) {
-    socket.send(JSON.stringify([Types.Messages.CONNECT, GAME_ID]));
-  };
+    Vue.use(VueRouter);
 
-  let playerManager = new PlayerManager(socket);
-  playerManager.registerServerHooks();
+    function mustAuth(to, from, next) {
+        if(localStorage.getItem('username') == null) {
+            next(false);
+        } else {
+            next();
+        }
+    }
 
-  let player = new Player(GAME_ID);
-  player.registerGameHooks(socket);
+    const routes = [
+        {
+            path: '/',
+            redirect: '/login'
+        },
+        {
+            path: '/character-creator',
+            component: CharacterCreator,
+            beforeEnter: mustAuth
+        },
+        {
+            path: '/login',
+            component: DemoAuth
+        },
+        {
+            path: '/game',
+            component: Game,
+            beforeEnter: mustAuth
+        }
+    ];
+    const router = new VueRouter({
+        routes // short for `routes: routes`
+    });
+
+    const app = new Vue({
+        router,
+        render: h => h(App)
+    }).$mount('#app');
 
 })();
