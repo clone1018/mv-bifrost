@@ -5,11 +5,17 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 module.exports = {
   entry: "./src/main.js",
   output: {
-    path: path.resolve("/Users/clone1018/Projects/clone1018/mv-mmo-test/js/plugins"),
+    path: path.resolve("../mv-mmo-test/js/plugins"),
     filename: 'Bifrost.js'
   },
   devtool: "inline-source-map",
-  module: {
+    resolve: {
+        modules: [
+            path.resolve('./src'),
+            path.resolve('./node_modules')
+        ]
+    },
+    module: {
     rules: [
       {
         test: /\.js$/, //Check for all js files

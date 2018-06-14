@@ -4,8 +4,9 @@ import MapManager from "./MapManager";
 
 export default class Player {
 
-  constructor(id) {
+  constructor(id, username) {
     this.id = id;
+    this.username = username;
     this.eventId = null;
     this.event = null;
 
