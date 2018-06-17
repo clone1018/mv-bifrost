@@ -17,7 +17,7 @@
 
             SceneManager.run(Scene_Boot);
 
-            let socket = new Socket("ws://127.0.0.1:8101/socket", {
+            let socket = new Socket("ws://cosmos.axxim.net:8101/socket", {
                 logger: (kind, msg, data) => {
                     console.log(`${kind}: ${msg}`, data)
                 },
@@ -38,6 +38,6 @@
     }
 </script>
 
-<style scoped>
+<style>
 
 </style>

@@ -54,7 +54,7 @@ export default class Player {
 
   }
 
-  sendMessage(type, params) {
+  async sendMessage(type, params) {
     this.channel.push(type, params);
   }
 

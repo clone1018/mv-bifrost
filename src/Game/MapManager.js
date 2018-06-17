@@ -25,8 +25,14 @@ export default class MapManager {
             player.moveSpeed = params.move_speed;
             player.moveFrequency = params.move_frequency;
 
-            player.createEvent();
-            player.handleMove();
+            try {
+              player.createEvent();
+              player.handleMove();
+            } catch(e) {
+                console.error(e);
+                // Ignore this for now..
+            }
+
         });
 
         this.channel.on("SPAWN", function (params) {
@@ -56,7 +62,6 @@ export default class MapManager {
 
 
         this.channel.on("MOVE", function (params) {
-            console.log(manager.players);
             let player = manager.players[params.player_id];
 
             player.x = params.x;

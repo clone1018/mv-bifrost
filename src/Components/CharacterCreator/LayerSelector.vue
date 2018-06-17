@@ -1,6 +1,6 @@
 <template>
     <div>
-        <select v-model="layer" size="18">
+        <select v-model="layer" size="18"  class="rpgui-list" >
             <option v-for="option in options" v-bind:value="option.value">
                 {{ option.text }}
             </option>
