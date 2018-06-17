@@ -1,6 +1,10 @@
 /*:
  * @plugindesc Bifrost - Connects with Heimdall to provide MMO features to MV games
- * @author clone1018       
+ * @author clone1018
+ *
+ * @param Websocket URL
+ * @desc Where the websocket points to
+ * @default 1
  */
 
 import "./hooker";

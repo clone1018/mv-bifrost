@@ -12,8 +12,8 @@ export default class MapManager {
     registerServerHooks() {
         let manager = this;
 
-        this.channel.on("EXIST", function(params) {
-            console.log("Creating player: ", params)
+        this.channel.on("EXIST", function (params) {
+            console.log("Creating player: ", params);
             manager.players[params.player_id] = new NetworkPlayer(params.player_id);
 
             let player = manager.players[params.player_id];
@@ -26,22 +26,14 @@ export default class MapManager {
             player.moveFrequency = params.move_frequency;
 
             try {
-              player.createEvent();
-              player.handleMove();
+                player.createEvent();
+                player.handleMove();
             } catch(e) {
                 console.error(e);
-                // Ignore this for now..
             }
-
         });
 
         this.channel.on("SPAWN", function (params) {
-            manager.players[params.player_id] = new NetworkPlayer(params.player_id);
-            manager.players[params.player_id].x = params.x;
-            manager.players[params.player_id].y = params.y;
-        });
-
-        this.channel.on("DESPAWN", function (params) {
             manager.players[params.player_id] = new NetworkPlayer(params.player_id);
             manager.players[params.player_id].x = params.x;
             manager.players[params.player_id].y = params.y;
@@ -57,12 +49,16 @@ export default class MapManager {
         });
 
         this.channel.on("DESPAWN", function (params) {
-            manager.players[params.player_id].deleteEvent();
+            let player = manager.players[params.player_id];
+            if(typeof player === 'undefined') return;
+
+            player.deleteEvent();
         });
 
 
         this.channel.on("MOVE", function (params) {
             let player = manager.players[params.player_id];
+            if(typeof player === 'undefined') return;
 
             player.x = params.x;
             player.y = params.y;
@@ -71,7 +67,7 @@ export default class MapManager {
             player.moveFrequency = params.move_frequency;
 
             player.handleMove();
-        })
+        });
 
 
         // this.socket.onmessage = function (incoming) {
